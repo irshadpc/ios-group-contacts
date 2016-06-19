@@ -10,7 +10,15 @@
 @class CNContact;
 @class CNGroup;
 
+@protocol ContactsControllerDelegate <NSObject>
+
+-(void)delegateReloadData;
+
+@end
+
 @interface ContactsController : NSObject
+
+@property id<ContactsControllerDelegate>delegate;
 
 -(NSArray<CNContact *>*)contacts;
 

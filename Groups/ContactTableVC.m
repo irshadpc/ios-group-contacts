@@ -12,7 +12,7 @@
 @import Contacts;
 @import ContactsUI;
 
-@interface ContactTableVC () <UISearchBarDelegate, CNContactViewControllerDelegate, ContactsGroupsDelegate>
+@interface ContactTableVC () <UISearchBarDelegate, CNContactViewControllerDelegate, ContactsGroupsDelegate, ContactsControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
@@ -31,6 +31,7 @@
     [super viewDidLoad];
     
     self.controller = [ContactsController new];
+    self.controller.delegate = self;
     if ([CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts] != CNAuthorizationStatusAuthorized) {
         [self.controller requestPermissionsWithCompletion:^(BOOL success, NSError *error) {
             if (success) {
@@ -49,6 +50,12 @@
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc]
                                           initWithTarget:self action:@selector(handleLongPress:)];
     [self.tableView addGestureRecognizer:lpgr];
+}
+
+-(void)delegateReloadData {
+    if (!self.tableView.visibleCells.count) {
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark Long Press

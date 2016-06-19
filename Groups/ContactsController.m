@@ -55,10 +55,10 @@
 
 
 -(void)fetchWithCompletion:(void (^)(BOOL success, NSError *error))completion {
-    [self._datasource removeAllObjects];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
          CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:@[CNContactIdentifierKey, CNContainerNameKey, [CNContactFormatter descriptorForRequiredKeysForStyle:CNContactFormatterStyleFullName]]];
         NSError *error;
+        [self._datasource removeAllObjects];
         BOOL success = [self.store enumerateContactsWithFetchRequest:request error:&error usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
             [self._datasource addObject:contact];
         }];
@@ -67,9 +67,11 @@
                 completion(NO, error);
             });
         }
-        self._fullArray = [NSArray arrayWithArray:self._datasource];
+        
+        self._fullArray= [NSArray arrayWithArray:self._datasource];
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(YES, nil);
+            [self.delegate delegateReloadData];
         });
         
     });
@@ -104,7 +106,7 @@
                 });
             }
         }
-        
+    
         dispatch_async(dispatch_get_main_queue(), ^{
             self._datasource = [NSMutableArray arrayWithArray:results];
             completion(YES, nil);
