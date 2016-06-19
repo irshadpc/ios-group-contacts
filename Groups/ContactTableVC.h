@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  ContactTableVC.h
 //  Groups
 //
 //  Created by Michael Helvey on 6/18/16.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface ContactTableVC : UITableViewController
 
 @end
-
